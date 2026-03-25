@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ROOM WANGI FREE - Form Pendaftaran</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #f5f0e7 0%, #e8dfd1 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Efek aroma/wangi subtle */
+        body::before {
+            content: "🌸";
+            font-size: 220px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            opacity: 0.08;
+            pointer-events: none;
+            transform: rotate(-10deg);
+        }
+
+        body::after {
+            content: "🌿";
+            font-size: 180px;
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            opacity: 0.07;
+            pointer-events: none;
+            transform: rotate(5deg);
+        }
+
+        .card {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(255, 255, 245, 0.96);
+            backdrop-filter: blur(0px);
+            border-radius: 48px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(255, 245, 215, 0.8);
+        }
+
+        .header {
+            background: #2c2b28;
+            padding: 28px 28px 20px;
+            text-align: center;
+            border-bottom: 3px solid #d4af7a;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: #f7e9cc;
+            text-shadow: 2px 2px 0 #1f1e1b;
+            word-break: keep-all;
+        }
+
+        .header p {
+            color: #cdba92;
+            margin-top: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .tab-container {
+            padding: 24px 28px 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #3e3a34;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        label i {
+            font-style: normal;
+            font-size: 1.2rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            background: #fefaf2;
+            border: 1.5px solid #e2d5c0;
+            border-radius: 36px;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: #1f2a2e;
+        }
+
+        input:focus {
+            border-color: #c2a15b;
+            box-shadow: 0 0 0 3px rgba(194, 161, 91, 0.2);
+            background: #ffffff;
+        }
+
+        input::placeholder {
+            color: #bcae91;
+            font-weight: 400;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #2c2b28;
+            color: #f7e9cc;
+            border: none;
+            padding: 14px 18px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-submit:hover {
+            background: #1f1e1b;
+            transform: scale(0.98);
+            color: #ffefcf;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.96);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: wait;
+            transform: none;
+        }
+
+        /* Toast Notification Modern */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #1f5e3a 0%, #2e7d4e 100%);
+            color: white;
+            padding: 16px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+            max-width: 90%;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 600px) {
+            .toast-notification {
+                white-space: normal;
+                text-align: center;
+                padding: 14px 20px;
+                font-size: 0.9rem;
+                border-radius: 40px;
+                max-width: 85%;
+            }
+        }
+
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast-notification i {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .status-message {
+            margin-top: 24px;
+            padding: 12px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 500;
+            background: #f2ede4;
+            color: #3e3a34;
+            transition: all 0.2s;
+            min-height: 68px;
+        }
+
+        .status-loading {
+            background: #fff0db;
+            color: #aa7c3c;
+            border-left: 4px solid #e2b87a;
+        }
+
+        footer {
+            background: #f4efe7;
+            padding: 14px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #9b8e7a;
+            border-top: 1px solid #e4d9cb;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="header">
+        <h1>🌼 ROOM WANGI FREE 🌼</h1>
+        <p>✨ wangi yang tersimpan, akses gratis terbatas ✨</p>
+    </div>
+
+    <div class="tab-container">
+        <!-- Tab Form -->
+        <form id="registrationForm">
+            <div class="form-group">
+                <label><i>📝</i> NAMA LENGKAP</label>
+                <input type="text" id="nama" name="nama" placeholder="cth: Salma Aulia" required autocomplete="name">
+            </div>
+
+            <div class="form-group">
+                <label><i>📞</i> TELEPON</label>
+                <input type="tel" id="telepon" name="telepon" placeholder="0812-3456-7890 / +62xxx" required autocomplete="tel">
+            </div>
+
+            <div class="form-group">
+                <label><i>🔗</i> REFERRAL (kode / username)</label>
+                <input type="text" id="referral" name="referral" placeholder="cth: ROOMWANGI10 atau kosongkan" autocomplete="off">
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <span>✈️</span> KIRIM
+            </button>
+        </form>
+
+        <div id="statusMessage" class="status-message">
+            💬 Isi data, akan langsung terkirim ke bot Telegram
+        </div>
+    </div>
+    <footer>
+        🌸 Data Anda aman & terkirim secara realtime ke notifikasi admin 🌸
+    </footer>
+</div>
+
+<!-- Toast Notification Element -->
+<div id="toastNotification" class="toast-notification">
+    <i>✅</i>
+    <span id="toastMessage">DATA TELAH DIKIRIM ROOM WANGI AKAN AKTIF DALAM 10 MENIT</span>
+</div>
+
+<script>
+    // ======================= KONFIGURASI TELEGRAM BOT =======================
+    // GANTI dengan TOKEN BOT dan CHAT ID tujuan kamu
+    // Cara dapat token: @BotFather di Telegram
+    // Cara dapat chat ID: @userinfobot atau kirim pesan ke bot, lalu akses api
+    const BOT_TOKEN = "7663999999:AAHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";   // GANTI DENGAN TOKEN ASLI
+    const CHAT_ID   = "123456789";                                        // GANTI DENGAN CHAT ID TUJUAN
+    // =======================================================================
+
+    const form = document.getElementById('registrationForm');
+    const statusDiv = document.getElementById('statusMessage');
+    const submitBtn = document.getElementById('submitBtn');
+    const toast = document.getElementById('toastNotification');
+    const toastMessageSpan = document.getElementById('toastMessage');
+
+    // Fungsi untuk menampilkan toast modern
+    function showToast(message, isError = false) {
+        // Set pesan toast
+        toastMessageSpan.textContent = message;
+        
+        // Ubah style berdasarkan tipe (error atau sukses)
+        if (isError) {
+            toast.style.background = "linear-gradient(135deg, #c23b3b 0%, #a03030 100%)";
+            toast.querySelector('i').textContent = "⚠️";
+        } else {
+            toast.style.background = "linear-gradient(135deg, #1f5e3a 0%, #2e7d4e 100%)";
+            toast.querySelector('i').textContent = "✅";
+        }
+        
+        // Tampilkan toast
+        toast.classList.add('show');
+        
+        // Auto hide setelah 4 detik
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000);
+    }
+
+    // Fungsi helper untuk menampilkan status loading di form
+    function setStatus(message, type = 'info') {
+        statusDiv.innerHTML = message;
+        statusDiv.classList.remove('status-loading');
+        if (type === 'loading') {
+            statusDiv.classList.add('status-loading');
+        } else {
+            statusDiv.style.background = "#f2ede4";
+        }
+    }
+
+    // Fungsi mengirim data ke Telegram Bot
+    async function sendToTelegram(nama, telepon, referral) {
+        // Format pesan agar rapi dan informatif
+        let messageText = `✨ *PENDAFTARAN ROOM WANGI FREE* ✨\n\n`;
+        messageText += `👤 *Nama:* ${escapeMarkdown(nama)}\n`;
+        messageText += `📞 *Telepon:* ${escapeMarkdown(telepon)}\n`;
+        messageText += `🔗 *Referral:* ${referral ? escapeMarkdown(referral) : "tidak diisi"}\n`;
+        messageText += `⏱️ *Waktu:* ${new Date().toLocaleString('id-ID')}\n`;
+        messageText += `\n#RoomWangi #NewLead`;
+
+        // URL API Telegram
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+        const payload = {
+            chat_id: CHAT_ID,
+            text: messageText,
+            parse_mode: "Markdown",
+            disable_web_page_preview: true
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (data.ok) {
+                return { success: true, data };
+            } else {
+                console.error('Telegram API error:', data);
+                return { success: false, error: data.description || 'Gagal mengirim ke bot' };
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+            return { success: false, error: error.message || 'Koneksi gagal' };
+        }
+    }
+
+    // Escape karakter khusus untuk Markdown
+    function escapeMarkdown(text) {
+        if (!text) return '';
+        const specialChars = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+        let escaped = text;
+        for (let char of specialChars) {
+            escaped = escaped.split(char).join(`\\${char}`);
+        }
+        return escaped;
+    }
+
+    // Validasi input sederhana
+    function validateForm(nama, telepon) {
+        if (!nama || nama.trim() === "") {
+            showToast("❌ Nama tidak boleh kosong!", true);
+            return false;
+        }
+        if (!telepon || telepon.trim() === "") {
+            showToast("❌ Nomor telepon harus diisi!", true);
+            return false;
+        }
+        if (telepon.trim().length < 8) {
+            showToast("⚠️ Nomor telepon terlalu pendek, pastikan nomor aktif.", true);
+            return false;
+        }
+        return true;
+    }
+
+    // Event submit form
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Ambil nilai input
+        const nama = document.getElementById('nama').value.trim();
+        const telepon = document.getElementById('telepon').value.trim();
+        const referral = document.getElementById('referral').value.trim();
+
+        // Validasi lokal
+        if (!validateForm(nama, telepon)) return;
+
+        // Cek konfigurasi bot (pesan peringatan jika token masih dummy)
+        if (BOT_TOKEN === "7663999999:AAHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" || CHAT_ID === "123456789") {
+            showToast("⚠️ PERHATIAN: Token Bot atau Chat ID belum dikonfigurasi!", true);
+            console.log("📝 Data pendaftaran (simulasi):", { nama, telepon, referral });
+            // Tetap tampilkan toast sukses untuk demo? Tapi agar konsisten, kita kasih warning
+            // Namun untuk pengalaman pengguna, jika konfigurasi belum diatur, tetap tampilkan error toast.
+            return;
+        }
+
+        // Tampilkan loading di status message
+        setStatus("⏳ Mengirim data ke Telegram bot, harap tunggu...", "loading");
+        submitBtn.disabled = true;
+
+        // Kirim ke Telegram
+        const result = await sendToTelegram(nama, telepon, referral);
+
+        if (result.success) {
+            // Tampilkan toast modern dengan pesan yang diminta
+            showToast("DATA TELAH DIKIRIM ROOM WANGI AKAN AKTIF DALAM 10 MENIT", false);
+            
+            // Update status message
+            setStatus("✅ Pendaftaran berhasil! Silahkan cek notifikasi Telegram. Akses akan aktif dalam 10 menit.", "success");
+            
+            // Reset form
+            form.reset();
+            // Opsional: fokus ke nama lagi
+            document.getElementById('nama').focus();
+        } else {
+            let errorMsg = "Gagal mengirim data. ";
+            if (result.error) errorMsg += result.error;
+            else errorMsg += "Cek kembali token bot atau chat ID serta koneksi internet.";
+            showToast(`❌ ${errorMsg}`, true);
+            setStatus(`❌ ${errorMsg}`, "error");
+        }
+
+        // Aktifkan tombol kembali
+        submitBtn.disabled = false;
+    });
+
+    // Efek tambahan untuk tombol saat hover smooth
+    const btn = document.querySelector('.btn-submit');
+    if (btn) {
+        btn.addEventListener('mouseenter', () => {
+            btn.style.transform = 'scale(0.98)';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'scale(1)';
+        });
+    }
+</script>
+
+</body>
+</html>
